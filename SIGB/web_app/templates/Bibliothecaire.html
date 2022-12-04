@@ -5,9 +5,9 @@
         {% for attribute in biblio %}
             {{attribute}}:
             <hr>
-            <input type="text" name="{{attribute}}" placeholder="Type Here">
+            <input type="text" name="{{attribute}}" placeholder="Type Here" autocomplete="off">
             <hr>
         {% endfor %}
-        <input type="submit">
+        <input type="submit" autocomplete="off">
     </form>
 {% endblock %}

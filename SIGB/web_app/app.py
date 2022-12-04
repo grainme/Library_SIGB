@@ -14,9 +14,14 @@ for i in db.execute("SELECT id_bitc FROM bibliothecaire"):
 # Les Tables de la base de donnée
 components = ["Bibliothecaire", "Stagiaire", "Clients", "Documents"]
 # Les attributs de la table "Bibliothecaire".
-x = ["ID", "NOM", "PRENOM", "AGE", "QUALIFICATION"]
+x = ["ID", "NOM", "PRENOM", "AGE", "GRADE"]
+
 
 @app.route("/")
+def home():
+    return render_template("home.html")
+
+@app.route("/home")
 def index():
     return render_template("index.html", component = components)
 
@@ -24,10 +29,10 @@ def index():
 @app.route("/register", methods=["POST"])
 def register():
     if request.form.get("entite") == "Bibliothecaire":
-        return redirect("/login_page")
+        return redirect("/registrants")
     return "Access Denied!"
 
-@app.route("/login_page")
+@app.route("/login_page", methods=["POST"])
 def login_page():
     return render_template("login.html")
 
@@ -39,7 +44,7 @@ def login():
         if not name_login or not id:
             return render_template("alert.html")
         if int(id) in L:
-            return redirect("/registrants")
+            return redirect("/home")
         else:
             # I NEED TO CREATE AN HTML FILE TO ALERT NON BIBLIOTHECAIRE
             return render_template("alert.html")
@@ -64,10 +69,10 @@ def register_2():
     name = request.form.get("NOM")
     PRENOM = request.form.get("PRENOM")
     AGE = request.form.get("AGE")
-    QUALIF = request.form.get("QUALIFICATION")
+    GRADE = request.form.get("GRADE")
     
     # Registrants[name] = sport
-    db.execute("INSERT INTO Bibliothecaire (id_bitc, nom_bitc, prenom_bitc, age_bitc, qualif_bitc) VALUES(?, ?, ?, ?, ?)", ID, name, PRENOM, AGE, QUALIF)
+    db.execute("INSERT INTO Bibliothecaire (id_bitc, nom_bitc, prenom_bitc, age_bitc, grade) VALUES(?, ?, ?, ?, ?)", ID, name, PRENOM, AGE, GRADE)
     
     return  redirect("/registrants")
 
@@ -101,4 +106,4 @@ def querying():
         return render_template("registrants.html", registrants=[])
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
