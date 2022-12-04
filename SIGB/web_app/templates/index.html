@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block body %}
+    <h1 style="text-align:center">bibliothèque SIGB</h1>
+
+    <form action="/register" method="post" style="width: 75%;margin-left: 50px;">
+        {% for entity in component %}
+            <div class="form-check form-switch">
+                <input name="entite" class="form-check-input" type="radio" role="switch" id="flexSwitchCheckDefault" value="{{entity}}">
+                <label class="form-check-label" for="flexSwitchCheckDefault">{{entity}}</label>
+            </div>
+            <hr>
+        {% endfor %}
+        <button type="submit" class="btn btn-outline-primary">submit</button>
+    </form>
+
+
+
+{% endblock %}
