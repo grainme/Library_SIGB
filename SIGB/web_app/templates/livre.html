@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1 style="text-align: center;font-weight:bold">Liste de Livres</h1>
+    <table class="table table-dark table-hover table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>ISBN</th>
+                <th>ID Document</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book["code_ISBN"] }}</td>
+                    <td>{{ book["id_ref"] }}</td>
+                    <td><a href="/emprunts" style="text-decoration: none;
+                        color: inherit;">{{ book["id_editeur"] }}</a></td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+    <form action="/deregister_3" method="post" class="mb-3">
+        <div class="input-group mb-3" style="width: 75%;margin-left: 50px;" >
+            <input class="input-group-text" id="basic-addon1" type="submit" value="Delete" autocomplete="off">
+            <input autocomplete="off" name="id" type="text" class="form-control" placeholder="Type ID" aria-describedby="basic-addon1">
+        </div>
+    </form>
+
+    <form action="/querying_3" method="post" class="mb-3">
+        <div class="input-group mb-3" style="width: 75%;margin-left: 50px;">
+            <input class="input-group-text" id="basic-addon1" type="submit" value="Query" autocomplete="off">
+            <input autocomplete="off" name="query" type="text" class="form-control" placeholder="Add your Query" aria-describedby="basic-addon1">
+        </div>
+    </form>
+
+    <form action="/livre_reg" method="post" class="mb-3">
+        <div class="d-grid gap-2" style="width: 75%;margin-left: 50px;">
+            <button type="submit" class="btn btn-dark">Insert</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<link href="/static/style.css" rel="stylesheet" >
+    <div>
+      <div class="center-wrap">
+        <div class="section text-center">
+          </form>
+          <h4 class="mb-4 pb-3" style="color:black">Sign Up</h4>
+            <form action="/register_5" method="post">
+              {% for emprunt in empp %}
+                  <div class="form-group mt-2">
+                    <input type="text" name="{{emprunt}}" class="form-style" placeholder="Type {{emprunt}}" autocomplete="off">
+                    <i class="input-icon uil uil-lock-alt"></i>
+                  </div>
+              {% endfor %}
+              <input id="login" class="btn mt-4" type="submit" value="submit">
+            </form>
+            </div>
+          </div>
+        </div>>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1 style="text-align: center;font-weight:bold">LES EMPRUNTS</h1>
+    <table class="table table-dark table-hover table-sm table-bordered">
+        <thead>
+            <tr>
+                {% for att in emp_att %}
+                    <th>{{att}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in emp_vals %}
+                <tr>
+                    <td>{{ emp["Date_debut"] }}</td>
+                    <td>{{ emp["Date_fin"] }}</td>
+                    <td>{{ emp["id_exemp"] }}</td>
+                    <td>{{ emp["id_emp"] }}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+    <form action="/emprunt_reg" method="post" class="mb-3">
+        <div class="d-grid gap-2" style="width: 75%;margin-left: 50px;">
+            <button type="submit" class="btn btn-dark">Insert</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<link href="/static/style.css" rel="stylesheet" >
+    <div>
+      <div class="center-wrap">
+        <div class="section text-center">
+          </form>
+          <h4 class="mb-4 pb-3" style="color:black">Sign Up</h4>
+            <form action="/register_3" method="post">
+              {% for doc in docum %}
+                  <div class="form-group mt-2">
+                    <input type="text" name="{{doc}}" class="form-style" placeholder="{{doc}}" autocomplete="off">
+                    <i class="input-icon uil uil-lock-alt"></i>
+                  </div>
+              {% endfor %}
+              <input id="login" class="btn mt-4" type="submit" value="submit">
+            </form>
+            </div>
+          </div>
+        </div>
+{% endblock %}
