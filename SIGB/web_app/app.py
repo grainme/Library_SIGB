@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect
-import sqlite3
 from cs50 import SQL
 
 app = Flask(__name__)
@@ -23,11 +22,16 @@ for i in db.execute("SELECT id_editeur FROM Editeur"):
 ids_documents=[]
 for i in db.execute("SELECT id_ref FROM Document"):
     ids_documents.append(*iter(i.values()))
-print(ids_documents)
     
+# A list of the ISBN of the books in the database.
 ids_livres=[]
 for i in db.execute("SELECT code_ISBN FROM Livre"):
-    ids_documents.append(*iter(i.values()))
+    ids_livres.append(*iter(i.values()))
+    
+ids_clients=[]
+for i in db.execute("SELECT id_emp FROM Emprunteur"):
+    ids_clients.append(*iter(i.values()))
+
 
 # Les Tables de la base de donnée
 components = ["Bibliothecaire", "Stagiaire", "Clients", "Documents"]
@@ -35,7 +39,7 @@ components = ["Bibliothecaire", "Stagiaire", "Clients", "Documents"]
 biblio_attributes = ["ID", "NOM", "PRENOM", "AGE", "GRADE"]
 # A list of the attributes of the table "Document"
 docs_attributes = ["ID", "TITRE", "ANNEE_PUB", "EDITEUR", "NOMBRE EXEMPLAIRE"]
-
+# A list of the attributes of the table "Livre"
 livre_attributes = ["ISBN", "ID DOCUMENT"]
 
 @app.route("/")
@@ -84,8 +88,7 @@ def register_2():
     ID = request.form.get("ID")
     if not ID:
         return render_template("error.html", message = "ID Missing")
-    elif int(ID) in ids_bibliothecaire:
-        return render_template("error.html", message = "ID already Exists")
+
     
     name = request.form.get("NOM")
     PRENOM = request.form.get("PRENOM")
@@ -145,10 +148,9 @@ def register_3():
     nbr_exemp = request.form.get("NOMBRE EXEMPLAIRE")
     if not ID:
         return render_template("error.html", message = "ID Missing")
-    elif int(ID) in ids_documents:
-        return render_template("error.html", message = "ID already Exists")
 
-    db.execute("INSERT INTO Document (id_ref, an_pub, titre_doc, id_editeur,nbr_exemp ) VALUES(?, ?, ?, ?)", 
+
+    db.execute("INSERT INTO Document (id_ref, an_pub, titre_doc, id_editeur,nbr_exemp ) VALUES(?, ?, ?, ?, ?)", 
                ID , an_pub, titre, editeur, nbr_exemp)
     
     return  redirect("/docs")
@@ -173,36 +175,34 @@ def querying_2():
         return render_template("documents.html", dox=[])
 
 # LIVRE CODE    
-@app.route("/livre", methods=["POST"])
+@app.route("/livre", methods=['POST', 'GET'])
 def livre():
     livres = db.execute("SELECT * FROM Livre")
     return render_template("livre.html", books = livres)
 
-@app.route("/livre_reg", methods=["POST"])
+@app.route("/livre_reg", methods=['POST', 'GET'])
 def livre_reg():
     return render_template("livre_reg.html", livree=livre_attributes )
 
-@app.route("/register_4", methods=["POST"])
+@app.route("/register_4", methods=['POST', 'GET'])
 def register_4():
     ISBN = request.form.get("ISBN")
     ID_doc = request.form.get("ID DOCUMENT")
     if not ISBN:
         return render_template("error.html", message = "ID Missing")
-    elif int(ISBN) in ids_livres:
-        return render_template("error.html", message = "ID already Exists")
 
     db.execute("INSERT INTO Livre (code_ISBN, id_ref) VALUES(?, ?)", ISBN,ID_doc)
     
-    return  redirect("/livre")
+    return render_template("livre.html")
 
-@app.route("/deregister_3", methods=["POST"])
+@app.route("/deregister_3", methods=['POST', 'GET'])
 def deregister_3():    # sourcery skip: use-named-expression
-    id = request.form.get("ISBN")
+    id = request.form.get("id")
     if id:
         db.execute("DELETE FROM Livre WHERE code_ISBN = ?", id)
     return redirect("/livre")
 
-@app.route("/querying_3", methods=["POST"])
+@app.route("/querying_3", methods=['POST', 'GET'])
 def querying_3():
     query = request.form.get("query")
     try:
@@ -213,6 +213,60 @@ def querying_3():
         return render_template("livre.html", books=query_x)
     else:
         return render_template("livre.html", books=[])
+
+# CODE CLIENTS
+clts_attributes = ["ID", "NOM", "PRENOM", "TELEPHONE", "EMAIL", "VILLE", "CATEGORIE"]
+
+@app.route("/Clients")
+def clients():
+    clts_ = db.execute("SELECT * FROM Emprunteur")
+    
+    return render_template("clients.html", clients = clts_)
+
+@app.route("/client_reg", methods=["POST"])
+def client_reg():
+    return render_template("clients_reg.html", clt_att=clts_attributes )
+
+@app.route("/register_6", methods=["POST"])
+def register_6():
+    
+    id = request.form.get("ID")
+    nom = request.form.get("NOM")
+    prenom = request.form.get("PRENOM")
+    tele = request.form.get("TELEPHONE")
+    mail = request.form.get("EMAIL")
+    ville = request.form.get("VILLE")
+    cat = request.form.get("CATEGORIE")
+    
+    if not id:
+        return render_template("error.html", message = "ID Missing")
+
+    db.execute("""INSERT INTO Emprunteur (id_emp, nom_emp, prenom_emp, tele_emp, email_emp,
+               ville_emp, ctg_emp) VALUES(?, ?, ?, ?, ?, ?, ?)""",
+               id, nom, prenom, tele, mail, ville, cat)
+    
+    return  redirect("/Clients")
+
+@app.route("/deregister_4", methods=["POST"])
+def deregister_4():    # sourcery skip: use-named-expression
+    id = request.form.get("id")
+    if id:
+        db.execute("PRAGMA foreign_keys = OFF")
+        db.execute("DELETE FROM Emprunteur WHERE id_emp = ?", id)
+        db.execute(f"UPDATE Emprunteur SET id_emp = id_emp - 1 WHERE id_emp>{id}")
+    return redirect("/Clients")
+
+@app.route("/querying_4", methods=["POST"])
+def querying_4():
+    query = request.form.get("query")
+    try:
+        query_x = db.execute(query)
+    except Exception:
+        return render_template("clients.html", clients=[])
+    if query_x:
+        return render_template("clients.html", clients=query_x)
+    else:
+        return render_template("clients.html", clients=[])
 
 # CODE EMPRUNT
 
@@ -239,6 +293,35 @@ def register_5():
                VALUES(?, ?, ?, ?)""", dt_debut, dt_fin, id_exemplaire, id_emprunteur)
     
     return  redirect("/emprunts")
+
+# CODE EXEMPLAIRE
+vars = ["id", "n_ord", "dt_achat", "etat", "id_emp", "id_rayon", "id_ref"]
+# A list of the attributes of the table "Exemplaire".
+exemp_att = ["ID","Num Ordre", "Date Achat", "Etat", "ID Emprunteur", "ID Rayon", "ID Document"]
+
+@app.route("/exemplaires")
+def exemplaires():
+    exemps = db.execute("SELECT * FROM Exemplaire")
+    return render_template("exemplaire.html", exemp = exemps)
+
+@app.route("/exemp_reg", methods=["POST"])
+def exemp_reg():
+    return render_template("exemp_reg.html",exp_att = exemp_att)
+
+@app.route("/register_7", methods=["POST"])
+def register_7():
+    for cnt in range(len(vars)):
+        vars[cnt] =  request.form.get(exemp_att[cnt])
+        
+    if not id:
+        return render_template("error.html", message = "ID Missing")
+
+    db.execute("""INSERT INTO Exemplaire (id_exemp, num_ord, date_acht, etat_exemp, id_emp,
+               id_rayon, id_ref) VALUES(?, ?, ?, ?, ?, ?, ?)""",
+               vars[0], vars[1], vars[2], vars[3], vars[4], vars[5], vars[6])
+    
+    return  redirect("/exemplaires")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

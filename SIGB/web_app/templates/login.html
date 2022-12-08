@@ -3,50 +3,51 @@
 {% block body %}
 
   <link href="/static/style.css" rel="stylesheet" >
-  <div class="section" style="background-color:black">
-    <div class="container">
-      <div class="row full-height justify-content-center">
-        <div class="col-12 text-center align-self-center py-5">
-          <div class="section pb-5 pt-5 pt-sm-2 text-center">
-            <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
-                  <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
-                  <label for="reg-log"></label>
-            <div class="card-3d-wrap mx-auto">
-              <div class="card-3d-wrapper">
-                <div class="card-front" style="background-color:black">
-                  <div class="center-wrap">
-                    <div class="section text-center">
+    <div class="section" style="background-color:black">
+      <div class="container">
+        <div class="row full-height justify-content-center">
+          <div class="col-12 py-5">
+            <div class="section pb-5 pt-5 pt-sm-2 text-center">
+              <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                    <label for="reg-log"></label>
+              <div class="card-3d-wrap mx-auto">
+                <div class="card-3d-wrapper">
+                  <div class="card-front" style="background-color:black">
+                    <div class="center-wrap">
+                      <div class="section text-center">
 
-                    <form action="/login", method="post">
-                      <h4 class="mb-4 pb-3">Log In</h4>
-                      <div class="form-group">
-                        <input type="text" name="login_name" class="form-style" placeholder="Type NAME" autocomplete="off">
-                        <i class="input-icon uil uil-at"></i>
-                      </div>	
-                      <div class="form-group mt-2">
-                        <input type="text" name="id" class="form-style" placeholder="Type ID" autocomplete="off">
-                        <i class="input-icon uil uil-lock-alt"></i>
-                      </div>
-                      <input id="login" class="btn mt-4" type="submit" value="submit">
+                      <form action="/login", method="post">
+                        <h4 class="mb-4 pb-3">Log In</h4>
+                        <div class="form-group">
+                          <input type="text" name="login_name" class="form-style" placeholder="Type NAME" autocomplete="off">
+                          <i class="input-icon uil uil-at"></i>
+                        </div>	
+                        <div class="form-group mt-2">
+                          <input type="text" name="id" class="form-style" placeholder="Type ID" autocomplete="off">
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <input id="login" class="btn mt-4" type="submit" value="submit">
+                          </div>
                         </div>
                       </div>
-                    </div>
-                <div class="card-back" style="background-color:black">
-                  <div class="center-wrap">
-                    <div class="section text-center">
-                      </form>
-
-                      <h4 class="mb-4 pb-3">Sign Up</h4>
-                        <form action="/register_2" method="post">
-                          {% for attribute in biblio %}
-                              <div class="form-group mt-2">
-                                <input type="text" name="{{attribute}}" class="form-style" placeholder="Type {{attribute}}" autocomplete="off">
-                                <i class="input-icon uil uil-lock-alt"></i>
-                              </div>
-                          {% endfor %}
-                          <input id="login" class="btn mt-2" type="submit" value="submit">
+                  <div class="card-back" style="background-color:black">
+                    <div class="center-wrap">
+                      <div class="section text-center">
                         </form>
-                      
+
+                        <h4 class="mb-4 pb-3">Sign Up</h4>
+                          <form action="/register_2" method="post">
+                            {% for attribute in biblio %}
+                                <div class="form-group mt-2">
+                                  <input type="text" name="{{attribute}}" class="form-style" placeholder="Type {{attribute}}" autocomplete="off">
+                                  <i class="input-icon uil uil-lock-alt"></i>
+                                </div>
+                            {% endfor %}
+                            <input id="login" class="btn mt-2" type="submit" value="submit">
+                          </form>
+                        
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -54,9 +55,8 @@
                 </div>
               </div>
             </div>
-          </div>
-      </div>
-  </div>
+        </div>
+    </div>
   
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
