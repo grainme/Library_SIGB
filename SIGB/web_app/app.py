@@ -7,6 +7,7 @@ app = Flask(__name__)
 # Creating a connection to the database.
 db = SQL("sqlite:///database.db")
 
+
 # Liste des Id de Bibliothecaires
 ids_bibliothecaire=[]
 for i in db.execute("SELECT id_bitc FROM bibliothecaire"):
@@ -33,6 +34,7 @@ for i in db.execute("SELECT id_emp FROM Emprunteur"):
     ids_clients.append(*iter(i.values()))
 
 
+
 # Les Tables de la base de donnée
 components = ["Bibliothecaire", "Stagiaire", "Clients", "Documents"]
 # Les attributs de la table "Bibliothecaire".
@@ -41,6 +43,8 @@ biblio_attributes = ["ID", "NOM", "PRENOM", "AGE", "GRADE"]
 docs_attributes = ["ID", "TITRE", "ANNEE_PUB", "EDITEUR", "NOMBRE EXEMPLAIRE"]
 # A list of the attributes of the table "Livre"
 livre_attributes = ["ISBN", "ID DOCUMENT"]
+# A list of the attributes of the table "Periodique"
+periodique_attributes = ["ISSN", "VOLUME", "NUMERO", "ID DOCUMENT"]
 
 @app.route("/")
 def home():
@@ -111,6 +115,8 @@ def deregister():    # sourcery skip: use-named-expression
     id = request.form.get("id")
     if id:
         db.execute("DELETE FROM Bibliothecaire WHERE id_bitc = ?", id)
+        db.execute(f"UPDATE Bibliothecaire SET id_bitc = id_bitc - 1 WHERE id_bitc>{id}")
+
     return redirect("/registrants")
 
 @app.route("/add_element", methods=["POST"])
@@ -155,11 +161,14 @@ def register_3():
     
     return  redirect("/docs")
 
-@app.route("/deregister_2", methods=["POST"])
+@app.route("/deregister_2", methods=["GET","POST"])
 def deregister_2():    # sourcery skip: use-named-expression
     id = request.form.get("id")
     if id:
+        db.execute("DELETE FROM Exemplaire WHERE id_ref = ?", id)
         db.execute("DELETE FROM Document WHERE id_ref = ?", id)
+        db.execute(f"UPDATE Document SET id_ref = id_ref - 1 WHERE id_ref>{id}")
+
     return redirect("/docs")
 
 @app.route("/querying_2", methods=["POST"])
@@ -200,6 +209,7 @@ def deregister_3():    # sourcery skip: use-named-expression
     id = request.form.get("id")
     if id:
         db.execute("DELETE FROM Livre WHERE code_ISBN = ?", id)
+
     return redirect("/livre")
 
 @app.route("/querying_3", methods=['POST', 'GET'])
@@ -229,7 +239,6 @@ def client_reg():
 
 @app.route("/register_6", methods=["POST"])
 def register_6():
-    
     id = request.form.get("ID")
     nom = request.form.get("NOM")
     prenom = request.form.get("PRENOM")
@@ -241,28 +250,28 @@ def register_6():
     if not id:
         return render_template("error.html", message = "ID Missing")
 
-    db.execute("""INSERT INTO Emprunteur (id_emp, nom_emp, prenom_emp, tele_emp, email_emp,
-               ville_emp, ctg_emp) VALUES(?, ?, ?, ?, ?, ?, ?)""",
-               id, nom, prenom, tele, mail, ville, cat)
+    db.execute("""INSERT INTO Emprunteur (id_emp, nom_emp, prenom_emp,
+               tele_emp, email_emp, ville_emp, ctg_emp) VALUES(?, ?, ?, ?, ?, ?, ?)"""
+               , id, nom, prenom, tele, mail, ville, cat)
     
     return  redirect("/Clients")
 
 @app.route("/deregister_4", methods=["POST"])
-def deregister_4():    # sourcery skip: use-named-expression
+def deregister_4():    
     id = request.form.get("id")
+    query_x = f"DELETE FROM Emprunteur WHERE id_emp = {id}"
+    print(query_x)
     if id:
-        db.execute("PRAGMA foreign_keys = OFF")
-        db.execute("DELETE FROM Emprunteur WHERE id_emp = ?", id)
+        db.execute("DELETE FROM EMPRUNT WHERE id_emp = ?", id)
+        db.execute(query_x)
         db.execute(f"UPDATE Emprunteur SET id_emp = id_emp - 1 WHERE id_emp>{id}")
+
     return redirect("/Clients")
 
 @app.route("/querying_4", methods=["POST"])
 def querying_4():
     query = request.form.get("query")
-    try:
-        query_x = db.execute(query)
-    except Exception:
-        return render_template("clients.html", clients=[])
+    query_x = db.execute(query)
     if query_x:
         return render_template("clients.html", clients=query_x)
     else:
@@ -271,7 +280,7 @@ def querying_4():
 # CODE EMPRUNT
 
 # A list of the attributes of the table "Emprunt"
-emprunt_attributs = ["Date Debut", "Date Fin", "ID Exemplaire", "ID EMPRUNTEUR"]
+emprunt_attributs = ["Date Debut", "Date Fin", "ID Exemplaire", "ID EMPRUNTEUR" ]
 
 @app.route("/emprunts")
 def emprunt():
@@ -286,18 +295,32 @@ def emprunt_reg():
 def register_5():
     dt_debut = request.form.get("Date Debut")
     dt_fin = request.form.get("Date Fin")
+    
     id_exemplaire = request.form.get("ID Exemplaire")
     id_emprunteur = request.form.get("ID EMPRUNTEUR")
 
-    db.execute("""INSERT INTO EMPRUNT (Date_debut, Date_fin, id_exemp, id_emp) 
-               VALUES(?, ?, ?, ?)""", dt_debut, dt_fin, id_exemplaire, id_emprunteur)
+    # Inserting the values of the variables dt_debut, dt_fin, id_exemplaire, id_emprunteur into the
+    # table EMPRUNT.
+    db.execute("""INSERT INTO EMPRUNT (Date_debut, Date_fin, id_exemp, id_emp) VALUES(?, ?, ?, ?)""",
+               dt_debut, dt_fin, id_exemplaire, id_emprunteur)
     
-    return  redirect("/emprunts")
+    db.execute("UPDATE EXEMPLAIRE SET pres_type='EN PRET' WHERE id_exemp = ?", id_exemplaire)
+    
+    return  redirect("/emprunts") 
+
+@app.route("/deregister_5", methods=["POST"])
+def deregister_5():
+    id = request.form.get("id")
+    if id:
+        db.execute("DELETE FROM Emprunt WHERE Emprunt.id_exemp=?",id)
+        db.execute("UPDATE EXEMPLAIRE SET pres_type='EN RAYON' WHERE id_exemp = ?", id)
+        
+    return redirect("/emprunts")
 
 # CODE EXEMPLAIRE
-vars = ["id", "n_ord", "dt_achat", "etat", "id_emp", "id_rayon", "id_ref"]
+vars = ["id", "n_ord", "dt_achat", "etat",  "id_rayon", "id_ref","pres_type"]
 # A list of the attributes of the table "Exemplaire".
-exemp_att = ["ID","Num Ordre", "Date Achat", "Etat", "ID Emprunteur", "ID Rayon", "ID Document"]
+exemp_att = ["ID","Num Ordre", "Date Achat", "Etat", "ID Rayon", "ID Document", "TYPE PRESENCE"]
 
 @app.route("/exemplaires")
 def exemplaires():
@@ -316,12 +339,124 @@ def register_7():
     if not id:
         return render_template("error.html", message = "ID Missing")
 
-    db.execute("""INSERT INTO Exemplaire (id_exemp, num_ord, date_acht, etat_exemp, id_emp,
-               id_rayon, id_ref) VALUES(?, ?, ?, ?, ?, ?, ?)""",
+    db.execute("""INSERT INTO Exemplaire (id_exemp, num_ord, date_acht, etat_exemp,
+               id_rayon, id_ref,pres_type) VALUES(?, ?, ?, ?, ?, ?, ?)""",
                vars[0], vars[1], vars[2], vars[3], vars[4], vars[5], vars[6])
     
     return  redirect("/exemplaires")
 
+@app.route("/deregister_7", methods=["POST"])
+def deregister_7():    # sourcery skip: use-named-expression
+    id = request.form.get("id")
+    if id: 
+        db.execute("DELETE FROM Emprunt WHERE id_exemp = ?", id)
+        db.execute("DELETE FROM Exemplaire WHERE id_exemp = ?", id)
+        db.execute(f"UPDATE Exemplaire SET id_exemp = id_exemp - 1 WHERE id_exemp>{id}")
+    return redirect("/exemplaires")
 
+
+# CODE STAGIAIRE
+
+# clts_attributes = ["ID", "NOM", "PRENOM", "ID BIBLIOTHECAIRE"]
+
+# @app.route("/stagiaire")
+# def stagiaire():
+#     clts_ = db.execute("SELECT * FROM Stagiaire")
+    
+#     return render_template("stagiaire.html", clients = clts_)
+
+# @app.route("/stagiaire_reg", methods=["POST"])
+# def stagiaire_reg():
+#     return render_template("stagiaire_reg.html", clt_att=clts_attributes )
+
+# @app.route("/register_6", methods=["POST"])
+# def register_6():
+    
+#     id = request.form.get("ID")
+#     nom = request.form.get("NOM")
+#     prenom = request.form.get("PRENOM")
+#     tele = request.form.get("TELEPHONE")
+#     mail = request.form.get("EMAIL")
+#     ville = request.form.get("VILLE")
+#     cat = request.form.get("CATEGORIE")
+    
+#     if not id:
+#         return render_template("error.html", message = "ID Missing")
+
+#     db.execute("""INSERT INTO Emprunteur (id_emp, nom_emp, prenom_emp, tele_emp, email_emp,
+#                ville_emp, ctg_emp) VALUES(?, ?, ?, ?, ?, ?, ?)""",
+#                id, nom, prenom, tele, mail, ville, cat)
+    
+#     return  redirect("/Clients")
+
+# @app.route("/deregister_4", methods=["POST"])
+# def deregister_4():    # sourcery skip: use-named-expression
+#     id = request.form.get("id")
+#     if id:
+#         db.execute("PRAGMA foreign_keys = OFF")
+#         db.execute("DELETE FROM Emprunteur WHERE id_emp = ?", id)
+#         db.execute(f"UPDATE Emprunteur SET id_emp = id_emp - 1 WHERE id_emp>{id}")
+#     return redirect("/Clients")
+
+# @app.route("/querying_4", methods=["POST"])
+# def querying_4():
+#     query = request.form.get("query")
+#     try:
+#         query_x = db.execute(query)
+#     except Exception:
+#         return render_template("clients.html", clients=[])
+#     if query_x:
+#         return render_template("clients.html", clients=query_x)
+#     else:
+#         return render_template("clients.html", clients=[])
+
+# PERIODIQUE CODE
+periodique_attributes = ["ISSN", "VOLUME", "NUMERO", "ID DOCUMENT"]
+
+
+@app.route("/periodique", methods=['GET','POST'])
+def periodique():
+    periodique = db.execute("SELECT * FROM Periodique")
+    return render_template("periodique.html", pdq = periodique)
+
+@app.route("/periodique_reg", methods=['POST', 'GET'])
+def periodique_reg():
+    return render_template("periodique_reg.html", PDQ=periodique_attributes)
+
+@app.route("/register_8", methods=['POST', 'GET'])
+def register_8():
+    issn = request.form.get("ISSN")
+    vol = request.form.get("VOLUME")
+    num = request.form.get("NUMERO")
+    doc = request.form.get("ID DOCUMENT")
+    if not issn:
+        return render_template("error.html", message = "ID Missing")
+
+    db.execute("""INSERT INTO  Periodique(code_ISSN, volume, num_per, id_ref)
+                VALUES(?, ?, ?, ?)""",issn, vol, num, doc)
+    
+    return render_template("periodique.html")
+
+@app.route("/deregister_8", methods=['POST', 'GET'])
+def deregister_8():    # sourcery skip: use-named-expression
+    id = request.form.get("id")
+    if id:
+        db.execute("DELETE FROM Livre WHERE code_ISSN = ?", id)
+
+    return redirect("/periodique")
+
+@app.route("/querying_9", methods=['POST', 'GET'])
+def querying_8():
+    query = request.form.get("query")
+    try:
+        query_x = db.execute(query)
+    except Exception:
+        return render_template("periodique.html", PDQ=[])
+    if query_x:
+        return render_template("periodique.html", PDQ=query_x)
+    else:
+        return render_template("periodique.html", PDQ=[])
+
+    
 if __name__ == "__main__":
     app.run(debug=True)
