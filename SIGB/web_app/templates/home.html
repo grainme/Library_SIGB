@@ -1,41 +1,43 @@
 {% extends 'layout.html' %}
 {% block body %}
+<head>
+    <!--Inter UI font-->
+    <link href="https://rsms.me/inter/inter-ui.css" rel="stylesheet">
+    <!--vendors styles-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <!-- Bootstrap CSS / Color Scheme -->
+    <link rel="stylesheet" href="static/default.css" id="theme-color">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SIGB IID</title>
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/bd-coming-soon.css">
+</head>
 
-    <div>
-        
-        <!--Inter UI font-->
-        <link href="https://rsms.me/inter/inter-ui.css" rel="stylesheet">
-
-        <!--vendors styles-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
-
-        <!-- Bootstrap CSS / Color Scheme -->
-        <link rel="stylesheet" href="static/default.css" id="theme-color">
-        <!--navigation-->
-        <section class="smart-scroll" >
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md navbar-dark">
-                    <a class="navbar-brand heading-black" href=".">
-                        IID
-                    </a>
-                    <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
-                            data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span data-feather="grid"></span>
-                    </button>
-                </nav>
-            </div>
-        </section>
-
-        <!--hero header-->
-        <section class="py-7 py-md-0 bg-hero" id="home">
+<body class="min-vh-100 d-flex flex-column">
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-dark bg-transparenet">
+                <a class="navbar-brand" href="http://ensakh-iid.ma/">
+                    <img src="static/images/logo_iid.png" alt="logo">
+                </a>
+                <span class="navbar-text ml-auto d-none d-sm-inline-block">PROJET SI </span>
+                <span type="submit" class="navbar-text d-none d-sm-inline-block" src="https://ensak.usms.ac.ma/">ENSA KHOURIBGA</span>
+            </nav>
+        </div>
+    </header>
+    <main class="my-auto">
+        <section>
             <div class="container">
-                <div class="row vh-md-100">
+                <div>
                     <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
                         <h1 class="heading-black text-capitalize" style="color:white">Systéme Integré de Gestion de Bibliothèque</h1>
-                        <p class="lead py-3" style="color:#dddddd">Prototype d'une application SIGB // IID Class.</p>
+                        <p class="lead py-3" style="color:#ffffff">Prototype d'une application SIGB // IID Class.</p>
                         <form action="/login_page" method="post">
                             <button type="submit" name="access" class="btn btn-primary d-inline-flex flex-row align-items-center">Acceder!
                                 <em class="ml-2" data-feather="arrow-right"></em>
@@ -45,5 +47,6 @@
                 </div>
             </div>
         </section>
-    </div>
+    </main>
+</body>
 {% endblock %}
