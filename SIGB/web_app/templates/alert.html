@@ -1,12 +1,32 @@
 {% extends 'layout.html' %}
 {% block body %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/bd-coming-soon.css">
+    </head>
     <script>
         alert("NAME or ID missing!")
     </script>
-
-    <form action="/login_page" style="display: flex;justify-content: center;align-items: center;">
-        <p>404, page not found</p>
-        <input type="submit" value="Go Back">
-    </form>
-    
+    <body class="min-vh-100 d-flex flex-column">
+        <main class="my-auto">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 section-left">
+                        <h1 class="page-title">NAME OR ID MISSING</h1>
+                        <form action="/">
+                        <input type="submit" value="go back" class="btn btn-primary" id="basic-addon1">
+                        </form>
+                    </div>
+                    <div class="col-md-6 d-none d-md-flex align-items-center">
+                        <img src="static/assets/images/cat.png" alt="coming soon" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
 {% endblock %}

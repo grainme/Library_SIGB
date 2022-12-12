@@ -33,7 +33,6 @@ for i in db.execute("SELECT code_ISBN FROM Livre"):
 ids_clients=[]
 for i in db.execute("SELECT id_emp FROM Emprunteur"):
     ids_clients.append(*iter(i.values()))
-print(db.execute("SELECT * FROM Bibliothecaire"))
 
 
 # Les Tables de la base de donnée
