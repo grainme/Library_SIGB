@@ -1837,12 +1837,12 @@ fieldset:disabled a.btn {
   pointer-events: none; }
 
 .btn-primary {
-  color: #11171a;
-  background-color: #fefefe;
-  border-color: #fdfdfd; }
+  color: #ffffff;
+  background-color: #b95dff;
+  border-color: #b95dff; }
   .btn-primary:hover {
     color: #ffffff;
-    background-color: #ffffff;
+    background-color: #b95dff;
     border-color: #f4f4f4; }
   .btn-primary:focus, .btn-primary.focus {
     box-shadow: 0 0 0 0.2rem rgba(227, 229, 229, 0.5); }

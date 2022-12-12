@@ -7,7 +7,8 @@ app = Flask(__name__)
 # Creating a connection to the database.
 db = SQL("sqlite:///database.db")
 
-
+Bibliothecaires = db.execute("SELECT * FROM Bibliothecaire")
+    
 # Liste des Id de Bibliothecaires
 ids_bibliothecaire=[]
 for i in db.execute("SELECT id_bitc FROM bibliothecaire"):
@@ -32,7 +33,7 @@ for i in db.execute("SELECT code_ISBN FROM Livre"):
 ids_clients=[]
 for i in db.execute("SELECT id_emp FROM Emprunteur"):
     ids_clients.append(*iter(i.values()))
-
+print(db.execute("SELECT * FROM Bibliothecaire"))
 
 
 # Les Tables de la base de donnée
@@ -47,44 +48,38 @@ livre_attributes = ["ISBN", "ID DOCUMENT"]
 periodique_attributes = ["ISSN", "VOLUME", "NUMERO", "ID DOCUMENT"]
 
 @app.route("/")
-def home():
+def root():
     return render_template("home.html")
 
-@app.route("/home")
-def index():
-    return render_template("index.html", component = components)
 
+@app.route("/login_page", methods=["POST"])
+def login_page():
+    return render_template("login.html", biblio=biblio_attributes)
 
 # Bilbiothecaire CODE
-
 @app.route("/register", methods=["POST"])
 def register():
     if request.form.get("entite") == "Bibliothecaire":
         return redirect("/registrants")
     return "Access Denied!"
 
-@app.route("/login_page", methods=["POST"])
-def login_page():
-    return render_template("login.html", biblio=biblio_attributes)
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
-    id = request.form.get("id")
+    imgs = ["avatar_1.png", "avatar_2.png", "avatar_3.png"]
+
+    id_ = request.form.get("id")
     name_login = request.form.get("login_name")
-    try:
-        if not name_login or not id:
-            return render_template("alert.html")
-        if int(id) in ids_bibliothecaire:
-            return redirect("/home")
-        else:
-            # I NEED TO CREATE AN HTML FILE TO ALERT NON BIBLIOTHECAIRE
-            return """    <script>
-        alert("NAME or ID missing!")
-    </script>"""
-    except Exception:
-        return """    <script>
-        alert("NAME or ID missing!")
-    </script>"""
+    if not name_login or not id_ or int(id_) not in ids_bibliothecaire:
+        return render_template("alert.html")
+    else:
+        return render_template("index.html",
+                               name = Bibliothecaires[int(id_)-1]["nom_bitc"],
+                               prenom = Bibliothecaires[int(id_)-1]["prenom_bitc"],
+                               age = Bibliothecaires[int(id_)-1]["age_bitc"],
+                               grade = Bibliothecaires[int(id_)-1]["grade"],
+                               img = imgs[int(id_)-1] )
+
 
 @app.route("/register_2", methods=["POST"])
 def register_2():

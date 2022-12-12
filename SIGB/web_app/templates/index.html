@@ -1,59 +1,362 @@
 {% extends 'layout.html' %}
 {% block body %}
-    <!-- Bootstrap CSS / Color Scheme -->
-    <link rel="stylesheet" href="static/default.css">
-    <div >
-        <!--navigation-->
-        <section class="smart-scroll">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md navbar-dark">
-                    <a class="navbar-brand heading-black" href=".">
-                        IID
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>SIGB IID</title>
+        <!-- plugins:css -->
+        <link rel="stylesheet" href="static/assets/vendors/mdi/css/materialdesignicons.min.css">
+        <link rel="stylesheet" href="static/assets/vendors/css/vendor.bundle.base.css">
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <link rel="stylesheet" href="static/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+        <link rel="stylesheet" href="static/assets/vendors/jvectormap/jquery-jvectormap.css">
+        <!-- End plugin css for this page -->
+        <!-- Layout styles -->
+        <link rel="stylesheet" href="static/assets/css/demo/style.css" >
+        <!-- End layout styles -->
+        <link rel="shortcut icon" href="static/assets/images/favicon.png" />
+    </head>
+      <body>
+      <script src="static/assets/js/preloader.js"></script>
+        <div class="body-wrapper">
+          <!-- partial:partials/_sidebar.html -->
+          <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
+            <div class="mdc-drawer__header">
+
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="mdc-drawer__content">
+              <div class="mdc-list-group" >
+                <nav class="mdc-list mdc-drawer-menu">
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="index.html">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>
+                      Dashboard
                     </a>
-                    <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
-                            data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span data-feather="grid"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll" href="./stagiaires">Stagiaires</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll" href="./emprunts">Emprunts</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll" href="./docs">Documents</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll" href="./exemplaires">Exemplaires</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll" href="./Clients">Clients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link page-scroll d-flex flex-row align-items-center text-primary" href="./registrants">
-                                    <em data-feather="layout" width="18" height="18" class="mr-2"></em>
-                                    Bibliothècaires
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                  </div>
+      
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-expansion-panel-link" href="#" data-toggle="expansionPanel" data-target="sample-page-submenu">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pages</i>
+                            Entities
+                      <i class="mdc-drawer-arrow material-icons">chevron_right</i>
+                    </a>
+
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/registrants">
+                            Bibliothecaire
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/Clients">
+                            Clients
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/docs">
+                            Documents
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/emprunts">
+                            Emprunts
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/stagiaire">
+                            Stagiaire
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/exemplaires">
+                            Exemplaires
+                          </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                          <a class="mdc-drawer-link" href="/">
+                            Register
+                          </a>
+                        </div>
+         
+                  </div>
+                  
                 </nav>
+              </div>
             </div>
-        </section>
-    </div>
-     <!--hero header-->
-     <section class="py-7 py-md-0 bg-hero" id="home">
-        <div class="container">
-            <div class="row vh-md-100">
-                <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
-                    <h1 style="color:white">Bienvenue!</h1>
-                    <p class="lead py-3" style="color:#dddddd">Vous pouvez accéder à la base de données!</p>
+          </aside>
+          <!-- partial -->
+          <div class="main-wrapper mdc-drawer-app-content">
+            <!-- partial:partials/_navbar.html -->
+            <header class="mdc-top-app-bar">
+              <div class="mdc-top-app-bar__row">
+                <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                  <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">menu</button>
+                  <span class="mdc-top-app-bar__title" style="font-family: 'Space Mono', monospace;">Bonjour {{name}}!</span>
+                  <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon search-text-field d-none d-md-flex">
+                    <i class="material-icons mdc-text-field__icon">search</i>
+                    <input class="mdc-text-field__input" id="text-field-hero-input">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label for="text-field-hero-input" class="mdc-floating-label">Search..</label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
                 </div>
-            </div>
+                <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+                  <div class="menu-button-container menu-profile d-none d-md-block">
+                    <button class="mdc-button mdc-menu-button">
+                      <span class="d-flex align-items-center">
+                        <span class="figure">
+                          <img src="../static/assets/images/faces/{{img}}" alt="user" class="user">
+                        </span>
+                        <span class="user-name">{{name}}</span>
+                      </span>
+                    </button>
+                    <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                      <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-account-edit-outline text-primary"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Edit profile</h6>
+                          </div>
+                        </li>
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-settings-outline text-primary"></i>                      
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Logout</h6>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="divider d-none d-md-block"></div>
+                  <div class="menu-button-container d-none d-md-block">
+                    <button class="mdc-button mdc-menu-button">
+                      <i class="mdi mdi-settings"></i>
+                    </button>
+                    <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                      <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-alert-circle-outline text-primary"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Settings</h6>
+                          </div>
+                        </li>
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-progress-download text-primary"></i>                      
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Update</h6>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="menu-button-container">
+                    <button class="mdc-button mdc-menu-button">
+                      <i class="mdi mdi-bell"></i>
+                    </button>
+                    <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                      <h6 class="title"> <i class="mdi mdi-bell-outline mr-2 tx-16"></i> Notifications</h6>
+                      <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon">
+                            <i class="mdi mdi-email-outline"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">You received a new message</h6>
+                            <small class="text-muted"> 6 min ago </small>
+                          </div>
+                        </li>
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon">
+                            <i class="mdi mdi-account-outline"></i>                      
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">New user registered</h6>
+                            <small class="text-muted"> 15 min ago </small>
+                          </div>
+                        </li>
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon">
+                            <i class="mdi mdi-alert-circle-outline"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">System Alert</h6>
+                            <small class="text-muted"> 2 days ago </small>
+                          </div>
+                        </li> 
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon">
+                            <i class="mdi mdi-update"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">You have a new update</h6>
+                            <small class="text-muted"> 3 days ago </small>
+                          </div>
+                        </li> 
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="menu-button-container">
+                    <button class="mdc-button mdc-menu-button">
+                      <i class="mdi mdi-email"></i>
+                      <span class="count-indicator">
+                        <span class="count">1</span>
+                      </span>
+                    </button>
+                    <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                      <h6 class="title"><i class="mdi mdi-email-outline mr-2 tx-16"></i> Messages</h6>
+                      <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+  
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail">
+                            <img src="static/assets/images/faces/face3.jpg" alt="user">
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">someone just ordered a book</h6>
+                            <small class="text-muted"> 4 Minutes ago </small>
+                          </div>
+                        </li>                
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="menu-button-container d-none d-md-block">
+                    <button class="mdc-button mdc-menu-button">
+                      <i class="mdi mdi-arrow-down-bold-box"></i>
+                    </button>
+                    <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                      <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-lock-outline text-primary"></i>
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Lock screen</h6>
+                          </div>
+                        </li>
+                        <li class="mdc-list-item" role="menuitem">
+                          <div class="item-thumbnail item-thumbnail-icon-only">
+                            <i class="mdi mdi-logout-variant text-primary"></i>                      
+                          </div>
+                          <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                            <h6 class="item-subject font-weight-normal">Logout</h6>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- partial -->
+            <br>
+            <br>
+            <main class="my-auto">
+                <section>
+                    {%for i in range(3)%}
+                        <br>
+                    {% endfor%}
+                        <div class="row">
+                            <div class="col-lg-4">
+                              <div>
+                                <div class="card-body text-center">
+                                  <img src="../static/assets/images/faces/{{img}}" alt="avatar"
+                                    class="rounded-circle img-fluid" style="width: 150px;">
+                                  <h5 class="my-3">{{name}} {{prenom}}</h5>
+                                  <p class="text-muted mb-1">Bibliothécaire Principale</p>
+                                  <p class="text-muted mb-4">ENSA, Khouribga</p>
+                                  <div class="d-flex justify-content-center">
+                                    <button type="button" class="btn btn-outline-primary ms-1">Contact</button>
+                                    <button type="button" class="btn btn-outline-primary ms-1">Schedule</button>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                                <br>
+                              <div class="card mb-4">
+                                <div class="card-body">
+ 
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">Nom Complet</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{name}} {{prenom}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">Email</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">ensakh_biblio@ensa.ac.ma</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">Age</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{age}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">Grade</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{grade}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">Address</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">ENSA, Khouribga, MA</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                </section>
+            </main>
+          </div>
         </div>
-    </section>
+        <!-- plugins:js -->
+        <script src="static/assets/vendors/js/vendor.bundle.base.js"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page-->
+        <script src="static/assets/vendors/chartjs/Chart.min.js"></script>
+        <script src="static/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+        <script src="static/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <!-- End plugin js for this page-->
+        <!-- inject:js -->
+        <script src="static/assets/js/material.js"></script>
+        <script src="static/assets/js/misc.js"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page-->
+        <script src="static/assets/js/dashboard.js"></script>
+        <!-- End custom js for this page-->
+      </body>
 
 {% endblock %}
