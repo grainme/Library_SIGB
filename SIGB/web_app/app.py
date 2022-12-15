@@ -65,24 +65,22 @@ def register():
 
 @app.route("/login", methods=["GET","POST"])
 def login():
-    imgs = ["avatar_1.png", "avatar_2.png", "avatar_3.png"]
-
     id_ = request.form.get("id")
     name_login = request.form.get("login_name")
     if not name_login or not id_ or int(id_) not in ids_bibliothecaire:
         return render_template("alert.html")
-    else:
-        return render_template("index.html",
-                               name = Bibliothecaires[int(id_)-1]["nom_bitc"],
-                               prenom = Bibliothecaires[int(id_)-1]["prenom_bitc"],
-                               age = Bibliothecaires[int(id_)-1]["age_bitc"],
-                               grade = Bibliothecaires[int(id_)-1]["grade"],
-                               img = imgs[int(id_)-1] )
+    imgs = ["avatar_1.png", "avatar_2.png", "avatar_3.png"]
+
+    return render_template("index.html",
+                           name = Bibliothecaires[int(id_)-1]["nom_bitc"],
+                           prenom = Bibliothecaires[int(id_)-1]["prenom_bitc"],
+                           age = Bibliothecaires[int(id_)-1]["age_bitc"],
+                           grade = Bibliothecaires[int(id_)-1]["grade"],
+                           img = imgs[int(id_)-1] )
 
 
 @app.route("/register_2", methods=["POST"])
 def register_2():
-    
     ID = request.form.get("ID")
     if not ID:
         return render_template("error.html", message = "ID Missing")
@@ -224,7 +222,6 @@ clts_attributes = ["ID", "NOM", "PRENOM", "TELEPHONE", "EMAIL", "VILLE", "CATEGO
 @app.route("/Clients")
 def clients():
     clts_ = db.execute("SELECT * FROM Emprunteur")
-    
     return render_template("clients.html", clients = clts_)
 
 @app.route("/client_reg", methods=["POST"])
@@ -348,98 +345,88 @@ def deregister_7():    # sourcery skip: use-named-expression
         db.execute(f"UPDATE Exemplaire SET id_exemp = id_exemp - 1 WHERE id_exemp>{id}")
     return redirect("/exemplaires")
 
+@app.route("/querying_exemp", methods=['POST', 'GET'])
+def querying_exemp():
+    query = request.form.get("query")
+    if "count" in query.lower():
+        return render_template("exemplaire.html", exemp=[], counting=db.execute(query))
+    try:
+        query_x = db.execute(query)
+    except Exception:
+        return render_template("exemplaire.html", exemp=[])
+    if query_x:
+        return render_template("exemplaire.html", exemp=query_x)
+    else:
+        return render_template("exemplaire.html", exemp=[])
+    
+@app.route("/update_exemp", methods=["POST"])
+def update():
+    up_q = request.form.get("update_query").split(", ")
+    if up_q:
+        db.execute(f"UPDATE Exemplaire SET {up_q[1]} = '{up_q[2]}' WHERE id_exemp = {int(up_q[0])}")
+    return redirect("/exemplaires")
 
 # CODE STAGIAIRE
 
-# clts_attributes = ["ID", "NOM", "PRENOM", "ID BIBLIOTHECAIRE"]
-
-# @app.route("/stagiaire")
-# def stagiaire():
-#     clts_ = db.execute("SELECT * FROM Stagiaire")
+stagiaire_attributes = ["ID", "NOM", "PRENOM", "ID BIBLIOTHECAIRE"]
+vars = ["id", "nom", "prenom", "bitc"]
+@app.route("/stagiaire")
+def stagiaire():
+    stgs_ = db.execute("SELECT * FROM Stagiaire")
     
-#     return render_template("stagiaire.html", clients = clts_)
+    return render_template("stagiaire.html", stagiaires = stgs_)
 
-# @app.route("/stagiaire_reg", methods=["POST"])
-# def stagiaire_reg():
-#     return render_template("stagiaire_reg.html", clt_att=clts_attributes )
+@app.route("/stagiaire_reg", methods=["POST"])
+def stagiaire_reg():
+    return render_template("stagiaire_reg.html", stg_att=stagiaire_attributes)
 
-# @app.route("/register_6", methods=["POST"])
-# def register_6():
+@app.route("/register_stg", methods=["POST"])
+def register_stg():
     
-#     id = request.form.get("ID")
-#     nom = request.form.get("NOM")
-#     prenom = request.form.get("PRENOM")
-#     tele = request.form.get("TELEPHONE")
-#     mail = request.form.get("EMAIL")
-#     ville = request.form.get("VILLE")
-#     cat = request.form.get("CATEGORIE")
+    for i in range(len(stagiaire_attributes)):
+        vars[i] = request.form.get(stagiaire_attributes[i])
+
+    if not id:
+        return render_template("error.html", message = "ID Missing")
+
+    db.execute("""INSERT INTO Stagiaire (id_stg, nom_stg, prenom_stg, id_bitc) 
+               VALUES(?, ?, ?, ?)""", vars[0], vars[1], vars[2], vars[3])
     
-#     if not id:
-#         return render_template("error.html", message = "ID Missing")
+    return  redirect("/stagiaire")
 
-#     db.execute("""INSERT INTO Emprunteur (id_emp, nom_emp, prenom_emp, tele_emp, email_emp,
-#                ville_emp, ctg_emp) VALUES(?, ?, ?, ?, ?, ?, ?)""",
-#                id, nom, prenom, tele, mail, ville, cat)
-    
-#     return  redirect("/Clients")
-
-# @app.route("/deregister_4", methods=["POST"])
-# def deregister_4():    # sourcery skip: use-named-expression
-#     id = request.form.get("id")
-#     if id:
-#         db.execute("PRAGMA foreign_keys = OFF")
-#         db.execute("DELETE FROM Emprunteur WHERE id_emp = ?", id)
-#         db.execute(f"UPDATE Emprunteur SET id_emp = id_emp - 1 WHERE id_emp>{id}")
-#     return redirect("/Clients")
-
-# @app.route("/querying_4", methods=["POST"])
-# def querying_4():
-#     query = request.form.get("query")
-#     try:
-#         query_x = db.execute(query)
-#     except Exception:
-#         return render_template("clients.html", clients=[])
-#     if query_x:
-#         return render_template("clients.html", clients=query_x)
-#     else:
-#         return render_template("clients.html", clients=[])
 
 # PERIODIQUE CODE
 periodique_attributes = ["ISSN", "VOLUME", "NUMERO", "ID DOCUMENT"]
 
-
-@app.route("/periodique", methods=['GET','POST'])
+@app.route("/periodique", methods=['GET', 'POST'])
 def periodique():
     periodique = db.execute("SELECT * FROM Periodique")
     return render_template("periodique.html", pdq = periodique)
 
-@app.route("/periodique_reg", methods=['POST', 'GET'])
+@app.route("/periodique_reg", methods=['GET', 'POST'])
 def periodique_reg():
     return render_template("periodique_reg.html", PDQ=periodique_attributes)
 
-@app.route("/register_8", methods=['POST', 'GET'])
-def register_8():
+@app.route("/register_periodique", methods=['GET', 'POST'])
+def register_periodique():
     issn = request.form.get("ISSN")
     vol = request.form.get("VOLUME")
     num = request.form.get("NUMERO")
     doc = request.form.get("ID DOCUMENT")
-    if not issn:
-        return render_template("error.html", message = "ID Missing")
-
-    db.execute("""INSERT INTO  Periodique(code_ISSN, volume, num_per, id_ref)
-                VALUES(?, ?, ?, ?)""",issn, vol, num, doc)
+    db.execute("""INSERT INTO  Periodique VALUES(?, ?, ?, ?)""",issn, vol, num, doc)
     
-    return render_template("periodique.html")
+    return redirect("/periodique")
 
-@app.route("/deregister_8", methods=['POST', 'GET'])
+
+@app.route("/deregister_8", methods=['POST'])
 def deregister_8():    # sourcery skip: use-named-expression
     id = request.form.get("id")
     if id:
-        db.execute("DELETE FROM Livre WHERE code_ISSN = ?", id)
+        db.execute("DELETE FROM Periodique WHERE code_ISSN = ?", id)
 
     return redirect("/periodique")
 
-@app.route("/querying_9", methods=['POST', 'GET'])
+@app.route("/querying_9", methods=['POST'])
 def querying_8():
     query = request.form.get("query")
     try:
@@ -451,6 +438,49 @@ def querying_8():
     else:
         return render_template("periodique.html", PDQ=[])
 
+# Queries 
+@app.route("/queries")
+def queries():
+    return render_template("queries.html")
+
+@app.route("/clts_ctg", methods=["POST"])
+def clts_ctg():
+    ctgs = ["VIP", "OCCASIONNEL", "ABONNE"]
+    x = request.form.get("list_option")
+    s = db.execute(f"SELECT * FROM Emprunteur WHERE ctg_emp='{ctgs[int(x)-1]}'")
+    return render_template("clients.html", clients = s)    
     
+
+@app.route("/nom_rayon", methods=["POST"])
+def nom_rayon():
+    x = request.form.get("list_option")
+    if x == "0":
+        s = db.execute("""SELECT nom_rayon,titre_doc FROM Document 
+	                    JOIN Exemplaire ON Exemplaire.id_ref = Document.id_ref
+		                    JOIN Rayon ON Rayon.id_rayon = Exemplaire.id_rayon
+   			                    GROUP BY Rayon.nom_rayon""")
+    else:
+        rayon_s = ["Anime", "Aventure", "Biographie", "Histoire", "divertissement"]
+        s = db.execute(f"""SELECT nom_rayon,titre_doc FROM Document 
+	                    JOIN Exemplaire ON Exemplaire.id_ref = Document.id_ref
+		                    JOIN Rayon ON Rayon.id_rayon = Exemplaire.id_rayon
+   			                    WHERE Rayon.nom_rayon = '{rayon_s[int(x)-1]}'
+                          """)
+
+    return list(s)
+
+    
+@app.route("/rayons", methods=["POST"])
+def rayon():
+    ray_x = db.execute("SELECT * FROM Rayon")
+    return render_template("rayons.html", ray = ray_x)
+
+
+@app.route("/count", methods=["GET", "POST"])
+def count():
+    entities_ = ["Exemplaire", "Emprunteur", "Document", "Stagiaire"]
+    s = [db.execute(f"SELECT COUNT(*) FROM {i}") for i in entities_]
+    return render_template("count.html", entities = s, list_ent = entities_)
+
 if __name__ == "__main__":
     app.run(debug=True)

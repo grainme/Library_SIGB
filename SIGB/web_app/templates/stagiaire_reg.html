@@ -2,23 +2,21 @@
 
 {% block body %}
 <link href="/static/style.css" rel="stylesheet" >
-<form action="/register_periodique" method="post">
     <div>
       <div class="center-wrap">
         <div class="section text-center">
           </form>
           <h4 class="mb-4 pb-3" style="color:black">Sign Up</h4>
-
-              {% for prd_att in PDQ %}
+            <form action="/register_stg" method="post">
+              {% for stagiaire_att in stg_att %}
                   <div class="form-group mt-2">
-                    <input type="text" name="{{prd_att}}" class="form-style" placeholder="Type {{prd_att}}" autocomplete="off">
+                    <input type="text" name="{{stagiaire_att}}" class="form-style" placeholder="{{stagiaire_att}}" autocomplete="off">
                     <i class="input-icon uil uil-lock-alt"></i>
                   </div>
               {% endfor %}
               <input id="login" class="btn mt-4" type="submit" value="submit">
-
+            </form>
             </div>
           </div>
         </div>
-      </form>
 {% endblock %}
