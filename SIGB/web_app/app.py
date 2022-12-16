@@ -62,6 +62,15 @@ def register():
         return redirect("/registrants")
     return "Access Denied!"
 
+@app.route("/rechercher", methods=["POST"])
+def rechercher_():
+    id_1 = request.form.get("search")
+    query = (f"SELECT * FROM Bibliothecaire WHERE id_bitc = {id_1}")
+    query_x = db.execute(query)
+    if query_x:
+        return render_template("registrants.html", registrants =query_x)
+    else:
+        return render_template("registrants.html", registrants =[])
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -78,13 +87,11 @@ def login():
                            grade = Bibliothecaires[int(id_)-1]["grade"],
                            img = imgs[int(id_)-1] )
 
-
 @app.route("/register_2", methods=["POST"])
 def register_2():
     ID = request.form.get("ID")
     if not ID:
         return render_template("error.html", message = "ID Missing")
-
     
     name = request.form.get("NOM")
     PRENOM = request.form.get("PRENOM")
@@ -93,7 +100,7 @@ def register_2():
     
     db.execute("""INSERT INTO Bibliothecaire (id_bitc, nom_bitc, prenom_bitc, age_bitc, grade) 
                VALUES(?, ?, ?, ?, ?)""", ID, name, PRENOM, AGE, GRADE)
-    return  redirect("/home")
+    return  redirect("/registrants")
 
 
 @app.route("/registrants")
@@ -267,6 +274,24 @@ def querying_4():
         return render_template("clients.html", clients=query_x)
     else:
         return render_template("clients.html", clients=[])
+    
+@app.route("/rechercher_2", methods=["POST"])
+def rechercher():
+    id_1 = request.form.get("search")
+    query = (f"SELECT * FROM Emprunteur WHERE id_emp = {id_1}")
+    query_x = db.execute(query)
+    if query_x:
+        return render_template("clients.html", clients=query_x)
+    else:
+        return render_template("clients.html", clients=[])
+
+
+@app.route("/update_client", methods=["POST"])
+def update_clt():
+    up_q = request.form.get("update_query").split(", ")
+    if up_q:
+        db.execute(f"UPDATE Emprunteur SET {up_q[1]} = '{up_q[2]}' WHERE id_emp = {int(up_q[0])}")
+    return redirect("/Clients")
 
 # CODE EMPRUNT
 
@@ -345,6 +370,16 @@ def deregister_7():    # sourcery skip: use-named-expression
         db.execute(f"UPDATE Exemplaire SET id_exemp = id_exemp - 1 WHERE id_exemp>{id}")
     return redirect("/exemplaires")
 
+@app.route("/rechercher_1", methods=["POST"])
+def rechercher_1():
+    id_1 = request.form.get("search")
+    query = (f"SELECT * FROM Exemplaire WHERE id_exemp = {id_1}")
+    query_x = db.execute(query)
+    if query_x:
+        return render_template("exemplaire.html", exemp =query_x)
+    else:
+        return render_template("exemplaire.html", exemp =[])
+    
 @app.route("/querying_exemp", methods=['POST', 'GET'])
 def querying_exemp():
     query = request.form.get("query")
@@ -469,13 +504,13 @@ def nom_rayon():
 
     return list(s)
 
-    
+# Page pour présenter les different rayons
 @app.route("/rayons", methods=["POST"])
 def rayon():
     ray_x = db.execute("SELECT * FROM Rayon")
     return render_template("rayons.html", ray = ray_x)
 
-
+# Nombre de records dans chaque entité
 @app.route("/count", methods=["GET", "POST"])
 def count():
     entities_ = ["Exemplaire", "Emprunteur", "Document", "Stagiaire"]
